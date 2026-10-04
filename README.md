@@ -29,12 +29,3 @@ You can also double-click `index.html` to open it directly in a browser. An inte
 |---------|----------------------|------------|
 | Patient | demo@medicare.com    | Demo@123   |
 | Admin   | admin@medicare.com   | Admin@123  |
-
-## Reset data
-
-Open browser DevTools (F12), go to **Application → Local Storage**, clear the site's entries and refresh.
-
-## Notes
-
-- Demo project only. Do not enter real patient information.
-- Passwords are only encoded, not securely hashed.
