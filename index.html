@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MediCare – Patient Management Portal</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0F172A;--teal:#0D9488;--teal-d:#0b7a70;--bg:#F8FAFC;--line:#E2E8F0;--mute:#64748B}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--navy)}
+h1,h2,h3,h4,h5{letter-spacing:-.02em;font-weight:700}
+.btn-teal{background:var(--teal);color:#fff;border:0;font-weight:600}.btn-teal:hover{background:var(--teal-d);color:#fff}
+.btn-outline-navy{border:1.5px solid var(--navy);color:var(--navy);font-weight:600}.btn-outline-navy:hover{background:var(--navy);color:#fff}
+.text-teal{color:var(--teal)}.bg-navy{background:var(--navy)}
+.brand{font-weight:800;font-size:1.3rem;color:var(--navy);text-decoration:none}.brand i{color:var(--teal)}
+.pub-nav{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.pub-nav a.nl{color:var(--navy);text-decoration:none;font-weight:500;margin:0 .9rem}.pub-nav a.nl:hover{color:var(--teal)}
+.hero{background:#fff;padding:4.5rem 0 5rem;border-bottom:1px solid var(--line)}
+.hero h1{font-size:clamp(2.2rem,5vw,3.6rem);line-height:1.08}
+.preview{background:var(--navy);color:#fff;border-radius:18px;padding:1.4rem;box-shadow:0 30px 60px -20px rgba(15,23,42,.45)}
+.preview .row-i{background:rgba(255,255,255,.07);border-radius:12px;padding:.8rem 1rem;margin-top:.7rem;cursor:pointer;transition:.2s}
+.preview .row-i:hover,.preview .row-i.on{background:var(--teal)}
+.fcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1.5rem;height:100%;transition:.2s}
+.fcard:hover{border-color:var(--teal);transform:translateY(-3px)}
+.ico{width:46px;height:46px;border-radius:12px;background:#CCFBF1;color:var(--teal);display:grid;place-items:center;font-size:1.2rem;margin-bottom:1rem}
+.stats{background:var(--navy);color:#fff;padding:3rem 0}.stats .n{font-size:2.4rem;font-weight:800;color:#5EEAD4}
+footer{background:#0b1220;color:#94A3B8;padding:2.5rem 0;font-size:.9rem}
+.auth-wrap{min-height:100vh;display:grid;place-items:center;padding:2rem 1rem;background:linear-gradient(135deg,var(--navy) 0 38%,var(--bg) 38%)}
+.auth-card{background:#fff;border-radius:18px;padding:2.2rem;width:100%;max-width:560px;box-shadow:0 25px 50px -20px rgba(15,23,42,.3)}
+.form-control,.form-select{border-radius:10px;padding:.65rem .85rem;border-color:var(--line)}
+.form-control:focus,.form-select:focus{border-color:var(--teal);box-shadow:0 0 0 .2rem rgba(13,148,136,.18)}
+.shake{animation:sh .4s}@keyframes sh{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.side{width:250px;background:var(--navy);color:#cbd5e1;position:fixed;inset:0 auto 0 0;padding:1.2rem;z-index:100;transition:.25s;display:flex;flex-direction:column}
+.side .brand{color:#fff;margin-bottom:1.5rem;display:block}
+.side a.sl{display:flex;gap:.8rem;align-items:center;color:#cbd5e1;text-decoration:none;padding:.7rem .9rem;border-radius:10px;margin-bottom:.2rem;font-weight:500}
+.side a.sl:hover{background:rgba(255,255,255,.07)}.side a.sl.on{background:var(--teal);color:#fff}
+.main{margin-left:250px;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid var(--line);padding:.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40}
+.content{padding:1.5rem}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1.3rem}
+.metric{display:flex;gap:1rem;align-items:center}.metric .v{font-size:1.9rem;font-weight:800;line-height:1}
+.spot{background:linear-gradient(120deg,var(--navy),#134e4a);color:#fff;border-radius:14px;padding:1.5rem}
+.avatar{width:56px;height:56px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.tl{border-left:2px solid var(--line);padding-left:1rem;margin-left:.4rem}.tl .it{position:relative;padding-bottom:1rem}
+.tl .it:before{content:"";position:absolute;left:-1.45rem;top:.3rem;width:10px;height:10px;border-radius:50%;background:var(--teal)}
+.slot{border:1.5px solid var(--line);border-radius:8px;padding:.35rem .7rem;background:#fff;font-size:.85rem;font-weight:600}
+.slot.on{background:var(--teal);color:#fff;border-color:var(--teal)}.slot:disabled{opacity:.4}
+.rx{border:1px solid var(--line);border-radius:14px;background:#fff;padding:1.4rem}
+.table>:not(caption)>*>*{padding:.85rem .8rem}.table thead th{color:var(--mute);font-weight:600;font-size:.8rem;background:var(--bg)}
+.toast-wrap{position:fixed;top:1rem;right:1rem;z-index:2000}
+@media(max-width:991px){.side{transform:translateX(-100%)}.side.open{transform:none}.main{margin-left:0}}
+@media print{body *{visibility:hidden}.print-area,.print-area *{visibility:visible}.print-area{position:absolute;left:0;top:0;width:100%;border:0}.no-print{display:none!important}}
+.dav{border-radius:50%;flex:none;display:block;box-shadow:0 0 0 3px #fff,0 0 0 4px var(--line)}
+.float-card{position:absolute;left:-18px;bottom:-6px;background:#fff;border-radius:14px;padding:.7rem 1rem;gap:.7rem;align-items:center;box-shadow:0 18px 40px -12px rgba(15,23,42,.35);z-index:2}
+.chip{display:inline-block;background:#CCFBF1;color:#0f766e;border-radius:999px;padding:.2rem .65rem;font-size:.75rem;font-weight:600;margin:0 .3rem .3rem 0}
+.chip.day{background:#F1F5F9;color:var(--navy)}
+.dbanner{background:linear-gradient(120deg,var(--navy),#134e4a);height:90px;border-radius:14px 14px 0 0}
+.dstat{background:var(--bg);border-radius:12px;padding:.7rem;text-align:center}.dstat b{display:block;font-size:1.15rem}
+.testi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1.4rem;height:100%}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast-wrap" id="toasts"></div>
+<div id="modals"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ---------- Data layer (localStorage) ---------- */
+const STORE=(()=>{const m={};try{localStorage.setItem('__t','1');localStorage.removeItem('__t');return localStorage}catch(e){return{getItem:k=>k in m?m[k]:null,setItem:(k,v)=>{m[k]=String(v)},removeItem:k=>{delete m[k]}}}})();
+const K={users:'mc_users',appts:'mc_appts',recs:'mc_recs',rx:'mc_rx',docs:'mc_docs',sess:'mc_session'};
+const get=(k,d)=>{try{return JSON.parse(STORE.getItem(k))??d}catch{return d}};
+const put=(k,v)=>STORE.setItem(k,JSON.stringify(v));
+const day=n=>{const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=d=>new Date(d+'T00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+const hash=p=>btoa(unescape(encodeURIComponent(p)));
+const DOCS=[
+ {id:'d1',name:'Dr. Arun Kumar',spec:'Cardiologist',exp:12,rating:4.9,dept:'Cardiology',icon:'fa-heart-pulse',g:'M',skin:'#E0B08A',hair:'#1f2937',qual:'MBBS, MD, DM (Cardiology)',hospital:'MediCare Heart Institute, Chennai',lang:'English, Tamil, Hindi',fee:800,days:'Mon, Wed, Fri',patients:3200,reviews:412,about:'Senior consultant cardiologist focused on preventive heart care, hypertension management and non-invasive cardiac imaging. Known for clear explanations and long-term follow-up plans.',skills:['Hypertension','Echocardiography','ECG & Stress Test','Cholesterol Management','Heart Failure Care']},
+ {id:'d2',name:'Dr. Priya Sharma',spec:'General Physician',exp:8,rating:4.8,dept:'General Medicine',icon:'fa-stethoscope',g:'F',skin:'#E8B999',hair:'#292524',qual:'MBBS, MD (Internal Medicine)',hospital:'MediCare Family Clinic, Madurai',lang:'English, Tamil, Hindi',fee:500,days:'Mon to Sat',patients:5100,reviews:688,about:'Family and internal medicine physician who treats everyday illness, chronic conditions and lifestyle disorders, and coordinates referrals to specialists when needed.',skills:['Fever & Infections','Diabetes Care','Thyroid Disorders','Health Check-ups','Preventive Care']},
+ {id:'d3',name:'Dr. Rahul Mehta',spec:'Neurologist',exp:15,rating:4.9,dept:'Neurology',icon:'fa-brain',g:'M',skin:'#C99673',hair:'#111827',qual:'MBBS, MD, DM (Neurology)',hospital:'MediCare Neuro Centre, Coimbatore',lang:'English, Hindi, Gujarati',fee:1000,days:'Tue, Thu, Sat',patients:2700,reviews:359,about:'Neurologist with 15 years of experience in headache disorders, epilepsy and stroke rehabilitation, supported by a dedicated EEG and nerve-conduction lab.',skills:['Migraine & Headache','Epilepsy','Stroke Recovery','Nerve Disorders','Memory Clinic']},
+ {id:'d4',name:'Dr. Ananya Rao',spec:'Dermatologist',exp:10,rating:4.7,dept:'Dermatology',icon:'fa-hand-dots',g:'F',skin:'#D9A47F',hair:'#3b2417',qual:'MBBS, MD (Dermatology)',hospital:'MediCare Skin & Hair Clinic, Trichy',lang:'English, Kannada, Telugu',fee:700,days:'Mon, Tue, Thu',patients:3900,reviews:521,about:'Dermatologist treating medical and cosmetic skin conditions, from eczema and acne to hair loss, using evidence-based plans tailored to each skin type.',skills:['Acne & Scarring','Eczema & Allergy','Hair Loss','Pigmentation','Skin Allergy Testing']}];
+function avatar(d,z=64){const f=d.g==='F';
+ const hair=f?`<path d="M31 46Q28 19 50 20Q72 19 69 46L69 64Q60 60 62 41Q50 31 38 41Q40 60 31 64Z" fill="${d.hair}"/>`:`<path d="M33 41Q33 21 50 21Q67 21 67 41Q60 30 50 31Q40 30 33 41Z" fill="${d.hair}"/>`;
+ return `<svg class="dav" viewBox="0 0 100 100" width="${z}" height="${z}" role="img" aria-label="${esc(d.name)}"><defs><linearGradient id="g${d.id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#CCFBF1"/><stop offset="1" stop-color="#99F6E4"/></linearGradient></defs><rect width="100" height="100" fill="url(#g${d.id})"/>${f?hair:''}<path d="M8 100Q10 70 50 67Q90 70 92 100Z" fill="#fff"/><path d="M40 68L50 86L60 68Z" fill="#0D9488"/><rect x="43" y="55" width="14" height="15" rx="5" fill="${d.skin}"/><ellipse cx="50" cy="42" rx="16" ry="19" fill="${d.skin}"/>${f?'':hair}<circle cx="44" cy="43" r="1.7" fill="#0F172A"/><circle cx="56" cy="43" r="1.7" fill="#0F172A"/><path d="M45 51Q50 55 55 51" stroke="#7c2d12" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M36 69Q33 87 46 89" stroke="#0F172A" stroke-width="2" fill="none"/><circle cx="46" cy="89" r="3" fill="#94A3B8"/></svg>`}
+const age=dob=>Math.max(0,Math.floor((Date.now()-new Date(dob))/31557600000));
+const SLOTS=['09:00 AM','09:30 AM','10:30 AM','11:00 AM','02:00 PM','03:30 PM','04:30 PM'];
+function seed(){
+ if(!get(K.docs)||get('mc_docs_ver')!==2){put(K.docs,DOCS);put('mc_docs_ver',2)}
+ const had=!!get(K.users);{const us=get(K.users,[]);if(!us.some(u=>u.role==='admin')){us.push({id:'admin1',role:'admin',name:'System Admin',email:'admin@medicare.com',phone:'9000000000',dob:'1985-01-01',gender:'Male',blood:'B+',address:'MediCare Head Office',pw:hash('Admin@123')});put(K.users,us)}}
+ if(had)return;
+ put(K.users,[...get(K.users,[]),{id:'u1',name:'Demo Patient',email:'demo@medicare.com',phone:'9876543210',dob:'1994-05-12',gender:'Female',blood:'O+',address:'12 Lake View Road, Chennai',pw:hash('Demo@123')}]);
+ put(K.appts,[
+  {id:'APT-1001',uid:'u1',doc:'d1',dept:'Cardiology',date:day(3),time:'10:30 AM',reason:'Routine heart check-up',status:'Confirmed'},
+  {id:'APT-1002',uid:'u1',doc:'d2',dept:'General Medicine',date:day(7),time:'09:00 AM',reason:'Seasonal fever follow-up',status:'Pending'},
+  {id:'APT-1003',uid:'u1',doc:'d4',dept:'Dermatology',date:day(-14),time:'03:30 PM',reason:'Skin allergy review',status:'Completed'},
+  {id:'APT-1004',uid:'u1',doc:'d3',dept:'Neurology',date:day(-30),time:'11:00 AM',reason:'Recurring headaches',status:'Cancelled'}]);
+ put(K.recs,[
+  {id:'REC-2001',uid:'u1',doc:'d4',date:day(-14),dx:'Contact dermatitis',notes:'Mild allergic reaction on forearms. Avoid fragrance-based soaps and use prescribed cream twice daily.',lab:'Completed'},
+  {id:'REC-2002',uid:'u1',doc:'d2',date:day(-45),dx:'Viral fever',notes:'Rest, fluids and paracetamol advised. Review if fever persists beyond 3 days.',lab:'Completed'},
+  {id:'REC-2003',uid:'u1',doc:'d1',date:day(-60),dx:'Elevated blood pressure',notes:'BP 138/88. Lifestyle changes recommended. Lipid profile ordered.',lab:'Pending'}]);
+ put(K.rx,[
+  {id:'RX-3001',uid:'u1',doc:'d4',date:day(-14),active:true,items:[{n:'Hydrocortisone 1% cream',d:'Apply thin layer',f:'Twice daily',dur:'10 days'},{n:'Cetirizine 10 mg',d:'1 tablet',f:'Once at night',dur:'7 days'}]},
+  {id:'RX-3002',uid:'u1',doc:'d2',date:day(-45),active:false,items:[{n:'Paracetamol 500 mg',d:'1 tablet',f:'Three times daily',dur:'3 days'},{n:'ORS sachet',d:'1 sachet in 1 L water',f:'As needed',dur:'3 days'}]}]);
+}
+seed();
+const user=()=>{const id=get(K.sess)?.uid;return get(K.users,[]).find(u=>u.id===id)};
+const mine=k=>get(k,[]).filter(x=>x.uid===get(K.sess)?.uid);
+const doc=id=>get(K.docs,[]).find(d=>d.id===id)||{name:'Unknown',spec:''};
+const badge=s=>`<span class="badge rounded-pill bg-${{Pending:'warning text-dark',Confirmed:'info text-dark',Completed:'success',Cancelled:'secondary'}[s]||'secondary'}">${s}</span>`;
+function toast(msg,type='success'){
+ const el=document.createElement('div');
+ el.className=`toast align-items-center text-bg-${type==='success'?'success':'danger'} border-0 show mb-2`;
+ el.innerHTML=`<div class="d-flex"><div class="toast-body"><i class="fa-solid ${type==='success'?'fa-circle-check':'fa-circle-exclamation'} me-2"></i>${esc(msg)}</div><button class="btn-close btn-close-white m-auto me-2" data-bs-dismiss="toast"></button></div>`;
+ $('#toasts').append(el);setTimeout(()=>el.remove(),3500);
+}
+const $=s=>document.querySelector(s);
+
+/* ---------- Public pages ---------- */
+function pubNav(){return `<nav class="pub-nav"><div class="container d-flex align-items-center justify-content-between py-3">
+ <a class="brand" href="#/"><i class="fa-solid fa-heart-pulse me-2"></i>MediCare</a>
+ <div class="d-none d-md-block"><a class="nl" href="#/">Home</a><a class="nl" href="#/" data-s="doctors">Doctors</a><a class="nl" href="#/" data-s="about">About</a><a class="nl" href="#/" data-s="contact">Contact</a></div>
+ <div><a href="#/login" class="btn btn-outline-navy btn-sm me-2">Login</a><a href="#/register" class="btn btn-teal btn-sm">Register</a></div></div></nav>`}
+function landing(){
+ const docs=get(K.docs,[]);
+ return pubNav()+`
+ <section class="hero"><div class="container"><div class="row align-items-center g-5">
+  <div class="col-lg-6"><h1>Your Health, Managed Simply</h1>
+   <p class="lead text-secondary my-4">Book appointments, review medical records and keep every prescription in one secure patient portal built around you.</p>
+   <a href="#/register" class="btn btn-teal btn-lg me-2">Get Started</a><a href="#/" data-s="doctors" class="btn btn-outline-navy btn-lg">Explore Doctors</a><div class="d-flex flex-wrap gap-3 mt-4 text-secondary small"><span><i class="fa-solid fa-shield-halved text-teal me-1"></i>Private &amp; secure</span><span><i class="fa-solid fa-clock text-teal me-1"></i>Book in 60 seconds</span><span><i class="fa-solid fa-star text-warning me-1"></i>4.8 average rating</span></div></div>
+  <div class="col-lg-6"><div class="position-relative pb-4"><div class="float-card d-none d-md-flex">${avatar(docs[0],44)}<div><div class="fw-semibold small">${docs[0].name}</div><div class="text-success" style="font-size:.72rem">&#9679; Available today</div></div></div><div class="preview">
+   <div class="d-flex justify-content-between"><strong>Today at a glance</strong><span class="badge bg-success">Live preview</span></div>
+   <div class="row-i on" data-p="Next visit: Dr. Arun Kumar, Cardiology, 10:30 AM"><i class="fa-regular fa-calendar-check me-2"></i>Appointments</div>
+   <div class="row-i" data-p="Latest record: Contact dermatitis, lab results ready"><i class="fa-solid fa-file-medical me-2"></i>Medical records</div>
+   <div class="row-i" data-p="2 active prescriptions, next refill in 5 days"><i class="fa-solid fa-prescription-bottle-medical me-2"></i>Prescriptions</div>
+   <div class="mt-3 small text-info" id="pv">Next visit: Dr. Arun Kumar, Cardiology, 10:30 AM</div></div></div></div></div></div></section>
+ <section class="py-5"><div class="container"><h2 class="text-center mb-4">Everything your care needs</h2><div class="row g-3">
+ ${[['fa-calendar-check','Appointment Management','Book, track and cancel visits in a few clicks.'],['fa-file-medical','Medical Records','Diagnoses, notes and lab status in one timeline.'],['fa-prescription-bottle-medical','Prescriptions','Digital prescriptions you can print any time.'],['fa-id-card','Patient Profiles','Keep your details and blood group up to date.']].map(f=>`<div class="col-md-6 col-lg-3"><div class="fcard"><div class="ico"><i class="fa-solid ${f[0]}"></i></div><h5>${f[1]}</h5><p class="text-secondary mb-0">${f[2]}</p></div></div>`).join('')}</div></div></section>
+ <section class="py-5 bg-white border-top"><div class="container"><h2 class="text-center mb-4">Care in three steps</h2><div class="row g-4 text-center">
+ ${[['fa-user-plus','Create your account','Register once with your basic health details.'],['fa-user-doctor','Choose a specialist','Search by name or specialization and pick a time slot.'],['fa-file-prescription','Follow your care','Review records and print prescriptions after each visit.']].map((x,i)=>`<div class="col-md-4"><div class="ico mx-auto"><i class="fa-solid ${x[0]}"></i></div><h5>${x[1]}</h5><p class="text-secondary mb-0">${x[2]}</p></div>`).join('')}</div></div></section>
+ <section class="stats"><div class="container"><div class="row text-center g-3">
+ ${[[500,'+','Patients'],[50,'+','Doctors'],[1000,'+','Appointments'],[24,'/7','Support']].map(s=>`<div class="col-6 col-md-3"><div class="n"><span data-c="${s[0]}">0</span>${s[1]}</div>${s[2]}</div>`).join('')}</div></div></section>
+ <section class="py-5" id="doctors"><div class="container"><h2 class="mb-1">Meet our specialists</h2><p class="text-secondary mb-4">Experienced, verified doctors across four departments.</p><div class="row g-3">
+ ${docs.map(d=>`<div class="col-md-6 col-lg-3"><div class="fcard text-center"><div class="d-flex justify-content-center">${avatar(d,92)}</div><h6 class="mt-3 mb-0">${d.name}</h6><div class="text-teal small fw-semibold">${d.spec}</div><div class="text-secondary small">${d.qual}</div><div class="small my-2"><i class="fa-solid fa-star text-warning"></i> ${d.rating} · ${d.exp} yrs</div><a href="#/login" class="btn btn-sm btn-outline-navy">Login to book</a></div></div>`).join('')}</div></div></section>
+ <section class="py-5 bg-white" id="about"><div class="container"><div class="row"><div class="col-lg-7"><h2>About MediCare</h2><p class="text-secondary">MediCare is a patient-first portal that brings scheduling, records and prescriptions together, so patients spend less time on paperwork and more time on recovery.</p></div></div></div></section>
+ <section class="py-5" id="contact"><div class="container"><h2>Contact</h2><p class="text-secondary mb-0"><i class="fa-solid fa-envelope me-2 text-teal"></i>support@medicare.demo &nbsp; <i class="fa-solid fa-phone me-2 text-teal"></i>+91 00000 00000</p></div></section>
+ <section class="py-5"><div class="container"><h2 class="text-center mb-4">Trusted by patients</h2><div class="row g-3">
+ ${[['Meena R.','Booking my cardiology visit took less than a minute, and my prescription was ready to print right after.'],['Karthik S.','All my records and lab status are in one place. No more carrying paper files to every appointment.'],['Divya L.','The doctor profiles made it easy to choose the right specialist and see when they are available.']].map(t=>`<div class="col-md-4"><div class="testi"><div class="text-warning mb-2">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="mb-3">${t[1]}</p><div class="d-flex align-items-center gap-2"><div class="avatar" style="width:38px;height:38px;font-size:.9rem">${t[0][0]}</div><div class="small fw-semibold">${t[0]}<div class="text-secondary fw-normal">Sample patient feedback</div></div></div></div></div>`).join('')}</div></div></section>
+ <section class="bg-navy text-white py-5"><div class="container d-md-flex align-items-center justify-content-between text-center text-md-start"><div><h3 class="mb-1">Ready to take charge of your health?</h3><div class="opacity-75">Create a free account in under a minute.</div></div><a href="#/register" class="btn btn-teal btn-lg mt-3 mt-md-0">Create account</a></div></section>
+ <footer><div class="container"><div class="d-flex justify-content-between flex-wrap gap-2"><span><i class="fa-solid fa-heart-pulse me-2 text-info"></i>MediCare Patient Portal</span><span>© 2026 MediCare</span></div>
+ <p class="mt-3 mb-0"><i class="fa-solid fa-triangle-exclamation me-1"></i>Demo notice: this is a demonstration app. Data lives only in your browser and must not include real patient information. Demo login: demo@medicare.com / Demo@123</p></div></footer>`;
+}
+function authShell(title,sub,body){return `<div class="auth-wrap"><div class="auth-card"><a class="brand" href="#/"><i class="fa-solid fa-heart-pulse me-2"></i>MediCare</a><h3 class="mt-3">${title}</h3><p class="text-secondary">${sub}</p><div id="err" class="alert alert-danger d-none"></div>${body}</div></div>`}
+function loginPage(){return authShell('Welcome back','Sign in to your patient account.',`
+ <form id="lf" novalidate><div class="mb-3"><label class="form-label">Email</label><input id="em" type="email" class="form-control" value="${esc(STORE.getItem('mc_remember')||'')}"></div>
+ <div class="mb-3"><label class="form-label">Password</label><div class="input-group"><input id="pw" type="password" class="form-control"><button type="button" class="btn btn-outline-secondary" id="tg"><i class="fa-regular fa-eye"></i></button></div></div>
+ <div class="d-flex justify-content-between mb-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="rm" ${STORE.getItem('mc_remember')?'checked':''}><label class="form-check-label" for="rm">Remember me</label></div><a href="#" id="fp">Forgot password?</a></div>
+ <button class="btn btn-teal w-100 py-2">Sign in</button></form>
+ <p class="text-center mt-3 mb-0 small">New here? <a href="#/register">Create an account</a><br><button type="button" id="dm" class="btn btn-sm btn-outline-secondary mt-2">Use demo patient</button> <button type="button" id="am" class="btn btn-sm btn-outline-secondary mt-2">Use admin account</button></p>`)}
+function registerPage(){
+ const f=(id,l,t='text',ex='')=>`<div class="col-md-6"><label class="form-label">${l}</label><input id="${id}" type="${t}" class="form-control" ${ex}><div class="invalid-feedback"></div></div>`;
+ return authShell('Create your account','Register to manage your care online.',`<form id="rf" novalidate><div class="row g-3">
+ ${f('name','Full name')}${f('email','Email','email')}${f('phone','Phone number','tel')}${f('dob','Date of birth','date',`max="${day(0)}"`)}
+ <div class="col-md-6"><label class="form-label">Gender</label><select id="gender" class="form-select"><option value="">Select</option><option>Female</option><option>Male</option><option>Other</option></select><div class="invalid-feedback"></div></div>
+ <div class="col-md-6"><label class="form-label">Blood group</label><select id="blood" class="form-select"><option value="">Select</option>${['A+','A-','B+','B-','AB+','AB-','O+','O-'].map(b=>`<option>${b}</option>`).join('')}</select><div class="invalid-feedback"></div></div>
+ <div class="col-12"><label class="form-label">Address</label><textarea id="address" class="form-control" rows="2"></textarea><div class="invalid-feedback"></div></div>
+ ${f('password','Password (8+ chars, with a number)','password')}${f('confirm','Confirm password','password')}</div>
+ <button class="btn btn-teal w-100 py-2 mt-4">Create account</button></form><p class="text-center mt-3 mb-0 small">Already registered? <a href="#/login">Sign in</a></p>`)}
+function bindPublic(r){
+ document.querySelectorAll('[data-s]').forEach(a=>a.onclick=e=>{e.preventDefault();go('');setTimeout(()=>document.getElementById(a.dataset.s)?.scrollIntoView({behavior:'smooth'}),50)});
+ document.querySelectorAll('.row-i').forEach(x=>x.onclick=()=>{document.querySelectorAll('.row-i').forEach(y=>y.classList.remove('on'));x.classList.add('on');$('#pv').textContent=x.dataset.p});
+ document.querySelectorAll('[data-c]').forEach(el=>{const t=+el.dataset.c;let n=0;const s=Math.ceil(t/40);const i=setInterval(()=>{n=Math.min(t,n+s);el.textContent=n.toLocaleString();if(n>=t)clearInterval(i)},30)});
+ if(r==='login'){
+  $('#tg').onclick=()=>{const p=$('#pw');p.type=p.type==='password'?'text':'password'};
+  $('#dm').onclick=()=>{$('#em').value='demo@medicare.com';$('#pw').value='Demo@123'};
+  $('#am').onclick=()=>{$('#em').value='admin@medicare.com';$('#pw').value='Admin@123'};
+  $('#fp').onclick=e=>{e.preventDefault();toast('Demo only: a reset link would be emailed to you.')};
+  $('#lf').onsubmit=e=>{e.preventDefault();const em=$('#em').value.trim().toLowerCase(),pw=$('#pw').value;
+   const u=get(K.users,[]).find(u=>u.email===em&&u.pw===hash(pw));
+   if(!u){const b=$('#err');b.textContent='Incorrect email or password. Check your details and try again.';b.classList.remove('d-none');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');return}
+   $('#rm').checked?STORE.setItem('mc_remember',em):STORE.removeItem('mc_remember');
+   put(K.sess,{uid:u.id});go(u.role==='admin'?'admin':'dashboard')}}
+ if(r==='register')$('#rf').onsubmit=e=>{e.preventDefault();
+  const v=id=>$('#'+id).value.trim(),er={};
+  if(v('name').length<3)er.name='Enter your full name.';
+  if(!/^\S+@\S+\.\S+$/.test(v('email')))er.email='Enter a valid email address.';
+  else if(get(K.users,[]).some(u=>u.email===v('email').toLowerCase()))er.email='This email is already registered.';
+  if(!/^[6-9]\d{9}$/.test(v('phone')))er.phone='Enter a 10-digit mobile number.';
+  if(!v('dob')||v('dob')>day(0))er.dob='Choose a valid date of birth.';
+  if(!v('gender'))er.gender='Select a gender.';if(!v('blood'))er.blood='Select a blood group.';
+  if(v('address').length<5)er.address='Enter your address.';
+  if(!/^(?=.*\d).{8,}$/.test(v('password')))er.password='Use 8+ characters including a number.';
+  if(v('confirm')!==v('password'))er.confirm='Passwords do not match.';
+  ['name','email','phone','dob','gender','blood','address','password','confirm'].forEach(id=>{const el=$('#'+id);el.classList.toggle('is-invalid',!!er[id]);el.parentElement.querySelector('.invalid-feedback').textContent=er[id]||''});
+  if(Object.keys(er).length){const b=$('#err');b.textContent='Please fix the highlighted fields.';b.classList.remove('d-none');return}
+  const us=get(K.users,[]),u={id:'u'+Date.now(),name:v('name'),email:v('email').toLowerCase(),phone:v('phone'),dob:v('dob'),gender:v('gender'),blood:v('blood'),address:v('address'),pw:hash(v('password'))};
+  us.push(u);put(K.users,us);toast('Account created. Please sign in.');go('login')}
+}
+
+/* ---------- App shell ---------- */
+const ANAV=[['admin','fa-gauge','Overview'],['admin-appointments','fa-calendar-check','Appointments'],['admin-patients','fa-users','Patients'],['admin-doctors','fa-user-doctor','Doctors'],['admin-records','fa-file-circle-plus','Records & Rx']];
+const NAV=[['dashboard','fa-gauge','Dashboard'],['profile','fa-user','My Profile'],['doctors','fa-user-doctor','Doctors'],['appointments','fa-calendar-check','Appointments'],['records','fa-file-medical','Medical Records'],['prescriptions','fa-prescription-bottle-medical','Prescriptions']];
+function shell(r,title,body){const u=user();return `<aside class="side no-print" id="side"><a class="brand" href="#/dashboard"><i class="fa-solid fa-heart-pulse me-2"></i>MediCare</a>
+ ${(u.role==='admin'?ANAV:NAV).map(n=>`<a class="sl ${n[0]===r?'on':''}" href="#/${n[0]}"><i class="fa-solid ${n[1]} fa-fw"></i>${n[2]}</a>`).join('')}
+ <a class="sl mt-auto" href="#" id="lo"><i class="fa-solid fa-right-from-bracket fa-fw"></i>Logout</a></aside>
+ <div class="main"><div class="topbar no-print"><div class="d-flex align-items-center gap-3"><button class="btn d-lg-none" id="mn"><i class="fa-solid fa-bars"></i></button><h5 class="mb-0">${title}</h5></div>
+ <div class="d-flex align-items-center gap-2"><div class="text-end d-none d-sm-block"><div class="fw-semibold small">${esc(u.name)}</div><div class="text-secondary" style="font-size:.75rem">${u.role==='admin'?'Administrator':'Blood group '+esc(u.blood)}</div></div><div class="avatar" style="width:40px;height:40px">${esc(u.name[0])}</div></div></div>
+ <div class="content">${body}</div></div>`}
+function dashboard(){
+ const u=user(),a=mine(K.appts),up=a.filter(x=>['Pending','Confirmed'].includes(x.status)&&x.date>=day(0)).sort((x,y)=>x.date.localeCompare(y.date));
+ const nx=up[0],rs=mine(K.recs),rx=mine(K.rx);
+ const M=[['fa-calendar','Upcoming Appointments',up.length],['fa-circle-check','Completed Appointments',a.filter(x=>x.status==='Completed').length],['fa-file-medical','Total Records',rs.length],['fa-pills','Active Prescriptions',rx.filter(x=>x.active).length]];
+ const feed=[...a.map(x=>({d:x.date,t:`Appointment with ${doc(x.doc).name} (${x.status})`})),...rx.map(x=>({d:x.date,t:`Prescription ${x.id} by ${doc(x.doc).name}`})),...rs.map(x=>({d:x.date,t:`Record ${x.id}: ${x.dx}`}))].sort((x,y)=>y.d.localeCompare(x.d)).slice(0,6);
+ return shell('dashboard','Dashboard',`<h3 class="mb-4">Welcome back, ${esc(u.name)}!</h3>
+ <div class="row g-3 mb-4">${M.map(m=>`<div class="col-6 col-xl-3"><div class="panel metric"><div class="ico mb-0"><i class="fa-solid ${m[0]}"></i></div><div><div class="v">${m[2]}</div><div class="text-secondary small">${m[1]}</div></div></div></div>`).join('')}</div>
+ <div class="row g-3"><div class="col-lg-7"><div class="spot h-100"><div class="small text-info mb-2">Next appointment</div>
+ ${nx?`<div class="d-flex gap-3 align-items-center">${avatar(doc(nx.doc),64)}<div><h5 class="mb-0">${doc(nx.doc).name}</h5><div class="opacity-75">${doc(nx.doc).spec} · ${doc(nx.doc).qual}</div></div><div class="ms-auto">${badge(nx.status)}</div></div>
+ <div class="mt-3"><i class="fa-regular fa-clock me-2"></i>${fmt(nx.date)} at ${nx.time}</div><div class="mt-1"><i class="fa-solid fa-hospital me-2"></i>${doc(nx.doc).hospital}</div><div class="mt-1 opacity-75"><i class="fa-regular fa-comment-dots me-2"></i>${esc(nx.reason)}</div><a href="#/appointments" class="btn btn-light btn-sm mt-3">View Details</a>`:`<p>No upcoming visits.</p><a href="#/appointments?book" class="btn btn-light btn-sm">Book an appointment</a>`}</div></div>
+ <div class="col-lg-5"><div class="panel h-100"><h6 class="mb-3">Recent activity</h6><div class="tl">${feed.map(f=>`<div class="it"><div class="small">${esc(f.t)}</div><div class="text-secondary" style="font-size:.75rem">${fmt(f.d)}</div></div>`).join('')||'<p class="text-secondary">Nothing yet.</p>'}</div></div></div></div>
+ <div class="row g-3 mt-1"><div class="col-lg-5"><div class="panel h-100"><h6 class="mb-3">Patient snapshot</h6><div class="d-flex align-items-center gap-3 mb-3"><div class="avatar" style="width:60px;height:60px;font-size:1.4rem">${esc(u.name[0])}</div><div><div class="fw-bold">${esc(u.name)}</div><div class="text-secondary small">Patient ID: MC-${u.id.replace(/\D/g,'').slice(-6).padStart(6,'0')}</div></div></div>
+ <div class="row g-2 small">${[['Blood group',u.blood],['Gender',u.gender],['Age',age(u.dob)+' years'],['Phone',u.phone]].map(x=>`<div class="col-6"><div class="dstat text-start"><span class="text-secondary">${x[0]}</span><b style="font-size:.95rem">${esc(x[1])}</b></div></div>`).join('')}</div>
+ <div class="small text-secondary mt-3"><i class="fa-solid fa-location-dot me-1 text-teal"></i>${esc(u.address)}</div></div></div>
+ <div class="col-lg-7"><div class="panel h-100"><h6 class="mb-3">Your care team</h6>
+ ${[...new Set(a.map(x=>x.doc))].map(id=>{const d=doc(id);return `<div class="d-flex align-items-center gap-3 mb-3">${avatar(d,52)}<div class="flex-grow-1"><div class="fw-semibold">${d.name}</div><div class="small text-secondary">${d.spec} · ${d.hospital}</div></div><a href="#/appointments?doc=${id}" class="btn btn-sm btn-outline-navy">Book again</a></div>`}).join('')||'<p class="text-secondary">Book a visit to build your care team.</p>'}
+ <div class="alert alert-info small mb-0"><i class="fa-solid fa-lightbulb me-2"></i>Health tip: carry your latest prescription and records to every visit, and arrive 10 minutes early for check-in.</div></div></div></div>`)}
+function doctorsPage(){
+ const specs=[...new Set(get(K.docs,[]).map(d=>d.spec))];
+ return shell('doctors','Doctors Directory',`<div class="panel mb-3"><div class="row g-2"><div class="col-md-8"><input id="q" class="form-control" placeholder="Search by doctor name or specialization"></div><div class="col-md-4"><select id="sf" class="form-select"><option value="">All specializations</option>${specs.map(s=>`<option>${s}</option>`).join('')}</select></div></div></div><div class="row g-3" id="dl"></div>`)}
+function drawDocs(){
+ const q=$('#q').value.toLowerCase(),s=$('#sf').value;
+ const l=get(K.docs,[]).filter(d=>(!s||d.spec===s)&&(d.name+d.spec).toLowerCase().includes(q));
+ $('#dl').innerHTML=l.map(d=>`<div class="col-md-6 col-xl-4"><div class="fcard"><div class="d-flex gap-3 align-items-center mb-3">${avatar(d,76)}<div><h6 class="mb-0">${d.name}</h6><div class="text-teal fw-semibold small">${d.spec}</div><div class="small text-secondary">${d.qual}</div></div></div>
+ <div class="small text-secondary mb-1"><i class="fa-solid fa-hospital fa-fw text-teal"></i> ${d.hospital}</div><div class="small text-secondary mb-1"><i class="fa-solid fa-briefcase-medical fa-fw text-teal"></i> ${d.exp} years experience</div><div class="small text-secondary mb-2"><i class="fa-solid fa-star fa-fw text-warning"></i> ${d.rating} (${d.reviews} reviews)</div>
+ <div class="mb-3">${d.days.split(', ').map(x=>`<span class="chip day">${x}</span>`).join('')}</div>
+ <div class="d-flex justify-content-between align-items-center mb-3"><span class="text-secondary small">Consultation fee</span><b>&#8377;${d.fee}</b></div>
+ <div class="d-flex gap-2"><button class="btn btn-outline-navy btn-sm flex-fill" data-v="${d.id}">View Profile</button><a href="#/appointments?doc=${d.id}" class="btn btn-teal btn-sm flex-fill">Book Appointment</a></div></div></div>`).join('')||'<p class="text-secondary">No doctors match your search. Clear the filter to see everyone.</p>';
+ document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>docModal(b.dataset.v));
+}
+function docModal(id){const d=doc(id);
+ $('#modals').innerHTML=`<div class="modal fade" id="dm2" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable"><div class="modal-content border-0"><div class="dbanner"></div><button class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"></button>
+ <div class="modal-body pt-0 px-4"><div class="d-flex align-items-end gap-3 mb-3" style="margin-top:-46px">${avatar(d,104)}<div class="pb-1"><h4 class="mb-0">${d.name}</h4><div class="text-teal fw-semibold">${d.spec}</div><div class="small text-secondary">${d.qual}</div></div></div>
+ <div class="row g-2 mb-3">${[[d.exp+' yrs','Experience'],[d.rating+' ★','Rating'],[d.patients.toLocaleString(),'Patients treated'],['₹'+d.fee,'Consultation fee']].map(x=>`<div class="col-6 col-md-3"><div class="dstat"><b>${x[0]}</b><span class="small text-secondary">${x[1]}</span></div></div>`).join('')}</div>
+ <h6>About</h6><p class="text-secondary">${d.about}</p><h6>Areas of expertise</h6><div class="mb-3">${d.skills.map(x=>`<span class="chip">${x}</span>`).join('')}</div>
+ <div class="row g-3 small"><div class="col-md-6"><i class="fa-solid fa-hospital text-teal me-2"></i><b>Hospital:</b> ${d.hospital}</div><div class="col-md-6"><i class="fa-solid fa-language text-teal me-2"></i><b>Languages:</b> ${d.lang}</div><div class="col-md-6"><i class="fa-solid fa-calendar-days text-teal me-2"></i><b>Available:</b> ${d.days}, 9:00 AM to 5:00 PM</div><div class="col-md-6"><i class="fa-solid fa-comments text-teal me-2"></i><b>Reviews:</b> ${d.reviews} patient reviews</div></div></div>
+ <div class="modal-footer"><button class="btn btn-light" data-bs-dismiss="modal">Close</button><button class="btn btn-teal" id="bk">Book Appointment</button></div></div></div></div>`;
+ const m=new bootstrap.Modal('#dm2');m.show();$('#bk').onclick=()=>{m.hide();setTimeout(()=>go('appointments?doc='+id),250)}}
+function apptPage(){
+ const a=mine(K.appts).sort((x,y)=>y.date.localeCompare(x.date));
+ return shell('appointments','Appointments',`<div class="d-flex justify-content-between mb-3"><h5 class="mb-0">Your appointments</h5><button class="btn btn-teal" id="nb"><i class="fa-solid fa-plus me-1"></i>Book Appointment</button></div>
+ <div class="panel p-0 table-responsive"><table class="table mb-0 align-middle"><thead><tr><th>ID</th><th>Doctor</th><th>Date &amp; time</th><th>Status</th><th></th></tr></thead><tbody>
+ ${a.map(x=>`<tr><td class="fw-semibold">${x.id}</td><td><div class="d-flex align-items-center gap-2">${avatar(doc(x.doc),38)}<div>${doc(x.doc).name}<div class="text-secondary small">${esc(x.reason)}</div></div></div></td><td>${fmt(x.date)}<div class="text-secondary small">${x.time}</div></td><td>${badge(x.status)}</td><td>${x.status==='Pending'?`<button class="btn btn-sm btn-outline-danger" data-x="${x.id}">Cancel</button>`:''}</td></tr>`).join('')||'<tr><td colspan="5" class="text-center text-secondary py-4">No appointments yet. Book your first visit.</td></tr>'}</tbody></table></div>`)}
+function bookModal(pre){
+ $('#modals').innerHTML=`<div class="modal fade" id="bm" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><form class="modal-content" id="bf" novalidate><div class="modal-header"><h5 class="modal-title">Book appointment</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body">
+ <div class="mb-3"><label class="form-label">Doctor</label><select id="bd" class="form-select"><option value="">Select doctor</option>${get(K.docs,[]).map(d=>`<option value="${d.id}" ${d.id===pre?'selected':''}>${d.name} (${d.spec})</option>`).join('')}</select><div class="small text-secondary mt-1" id="bi"></div></div>
+ <div class="row g-3 mb-3"><div class="col-6"><label class="form-label">Department</label><input id="bp" class="form-control" readonly></div><div class="col-6"><label class="form-label">Date</label><input id="bt" type="date" class="form-control" min="${day(1)}"></div></div>
+ <label class="form-label">Time slot</label><div class="d-flex flex-wrap gap-2 mb-3" id="bs">${SLOTS.map(s=>`<button type="button" class="slot" data-t="${s}">${s}</button>`).join('')}</div>
+ <label class="form-label">Reason for visit</label><textarea id="br" class="form-control" rows="2"></textarea><div class="text-danger small mt-2" id="be"></div></div>
+ <div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button><button class="btn btn-teal">Confirm booking</button></div></form></div></div>`;
+ const m=new bootstrap.Modal('#bm');m.show();let slot='';
+ const dp=()=>{const d=doc($('#bd').value);$('#bp').value=d.dept||'';$('#bi').innerHTML=d.hospital?`<i class="fa-solid fa-hospital me-1"></i>${d.hospital} · Fee &#8377;${d.fee} · ${d.days}`:''};dp();$('#bd').onchange=()=>{dp();sl()};$('#bt').onchange=sl;
+ function sl(){const taken=get(K.appts,[]).filter(x=>x.doc===$('#bd').value&&x.date===$('#bt').value&&x.status!=='Cancelled').map(x=>x.time);
+  document.querySelectorAll('.slot').forEach(b=>{b.disabled=taken.includes(b.dataset.t);if(b.disabled&&slot===b.dataset.t){slot='';b.classList.remove('on')}})}
+ $('#bs').onclick=e=>{const b=e.target.closest('.slot');if(!b||b.disabled)return;slot=b.dataset.t;document.querySelectorAll('.slot').forEach(x=>x.classList.toggle('on',x===b))};
+ $('#bf').onsubmit=e=>{e.preventDefault();const er=!$('#bd').value?'Choose a doctor.':!$('#bt').value?'Pick a date.':!slot?'Pick a time slot.':$('#br').value.trim().length<3?'Tell us the reason for your visit.':'';
+  $('#be').textContent=er;if(er)return;
+  const l=get(K.appts,[]);l.push({id:'APT-'+(1001+l.length),uid:get(K.sess).uid,doc:$('#bd').value,dept:$('#bp').value,date:$('#bt').value,time:slot,reason:$('#br').value.trim(),status:'Pending'});
+  put(K.appts,l);m.hide();toast('Appointment booked. Status: Pending.');setTimeout(render,300)};wireForms()
+}
+function recordsPage(){
+ const r=mine(K.recs).sort((x,y)=>y.date.localeCompare(x.date));
+ return shell('records','Medical Records',`<div class="panel p-0 table-responsive"><table class="table mb-0 align-middle"><thead><tr><th>Record</th><th>Date</th><th>Doctor</th><th>Diagnosis</th><th>Lab status</th><th></th></tr></thead><tbody>
+ ${r.map(x=>`<tr><td class="fw-semibold">${x.id}</td><td>${fmt(x.date)}</td><td>${doc(x.doc).name}</td><td>${esc(x.dx)}<div class="text-secondary small text-truncate" style="max-width:240px">${esc(x.notes)}</div></td><td><span class="badge bg-${x.lab==='Completed'?'success':'warning text-dark'}">${x.lab}</span></td><td><button class="btn btn-sm btn-outline-navy" data-r="${x.id}">View Summary</button></td></tr>`).join('')||'<tr><td colspan="6" class="text-center text-secondary py-4">No records on file.</td></tr>'}</tbody></table></div>`)}
+function rxPage(){
+ const r=mine(K.rx).sort((x,y)=>y.date.localeCompare(x.date)),u=user();
+ return shell('prescriptions','Prescriptions',`<div class="row g-3">${r.map(x=>`<div class="col-xl-6"><div class="rx" id="${x.id}"><div class="d-flex justify-content-between"><div><h5 class="mb-0">${x.id}</h5><div class="text-secondary small">${doc(x.doc).name} · ${doc(x.doc).spec}</div></div><div class="text-end small">${fmt(x.date)}<br>${x.active?'<span class="badge bg-success">Active</span>':'<span class="badge bg-secondary">Completed</span>'}</div></div>
+ <div class="small text-secondary my-2">Patient: ${esc(u.name)} · ${esc(u.blood)}</div>
+ <div class="table-responsive"><table class="table table-sm"><thead><tr><th>Medicine</th><th>Dosage</th><th>Frequency</th><th>Duration</th></tr></thead><tbody>${x.items.map(i=>`<tr><td class="fw-semibold">${i.n}</td><td>${i.d}</td><td>${i.f}</td><td>${i.dur}</td></tr>`).join('')}</tbody></table></div>
+ <button class="btn btn-outline-navy btn-sm no-print" data-p="${x.id}"><i class="fa-solid fa-print me-1"></i>Print Prescription</button></div></div>`).join('')||'<p class="text-secondary">No prescriptions yet.</p>'}</div>`)}
+function profilePage(){
+ const u=user(),f=(id,l,t='text')=>`<div class="col-md-6"><label class="form-label">${l}</label><input id="${id}" type="${t}" class="form-control" value="${esc(u[id])}"></div>`;
+ return shell('profile','My Profile',`<div class="panel" style="max-width:760px"><div class="d-flex align-items-center gap-3 mb-4"><div class="avatar" style="width:72px;height:72px;font-size:1.6rem">${esc(u.name[0])}</div><div><h5 class="mb-0">${esc(u.name)}</h5><div class="text-secondary small">${esc(u.email)}</div></div></div>
+ <form id="pf" novalidate><div class="row g-3">${f('name','Full name')}${f('email','Email','email')}${f('phone','Phone','tel')}${f('dob','Date of birth','date')}
+ <div class="col-md-6"><label class="form-label">Gender</label><select id="gender" class="form-select">${['Female','Male','Other'].map(g=>`<option ${g===u.gender?'selected':''}>${g}</option>`).join('')}</select></div>
+ <div class="col-md-6"><label class="form-label">Blood group</label><select id="blood" class="form-select">${['A+','A-','B+','B-','AB+','AB-','O+','O-'].map(g=>`<option ${g===u.blood?'selected':''}>${g}</option>`).join('')}</select></div>
+ <div class="col-12"><label class="form-label">Address</label><textarea id="address" class="form-control" rows="2">${esc(u.address)}</textarea></div></div>
+ <div class="text-danger small mt-2" id="pe"></div><button class="btn btn-teal mt-3">Save changes</button></form></div>`)}
+function bindApp(r){
+ $('#lo').onclick=e=>{e.preventDefault();STORE.removeItem(K.sess);toast('You have been logged out.');go('login')};
+ $('#mn').onclick=()=>$('#side').classList.toggle('open');
+ if(r.startsWith('admin'))adminBind(r);
+ document.querySelectorAll('.side a').forEach(a=>a.addEventListener('click',()=>$('#side')?.classList.remove('open')));
+ if(r==='doctors'){$('#q').oninput=drawDocs;$('#sf').onchange=drawDocs;drawDocs()}
+ if(r==='appointments'){
+  $('#nb').onclick=()=>bookModal('');
+  document.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{if(!b.dataset.c){b.dataset.c=1;b.textContent='Confirm cancel?';b.classList.replace('btn-outline-danger','btn-danger');setTimeout(()=>{delete b.dataset.c;b.textContent='Cancel';b.classList.replace('btn-danger','btn-outline-danger')},3000);return}const l=get(K.appts,[]);l.find(x=>x.id===b.dataset.x).status='Cancelled';put(K.appts,l);toast('Appointment cancelled.');render()});
+  const q=new URLSearchParams(CUR.split('?')[1]||'');if(q.has('doc')||q.has('book')){CUR='appointments';setTimeout(()=>bookModal(q.get('doc')||''),100)}}
+ if(r==='records')document.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{const x=get(K.recs,[]).find(y=>y.id===b.dataset.r);
+  $('#modals').innerHTML=`<div class="modal fade" id="rm" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">${x.id} · ${esc(x.dx)}</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p class="mb-1 text-secondary small">${fmt(x.date)} · ${doc(x.doc).name}</p><h6 class="mt-3">Doctor's notes</h6><p>${esc(x.notes)}</p><h6>Lab status</h6><span class="badge bg-${x.lab==='Completed'?'success':'warning text-dark'}">${x.lab}</span></div></div></div></div>`;new bootstrap.Modal('#rm').show()});
+ if(r==='prescriptions')document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.print-area').forEach(e=>e.classList.remove('print-area'));document.getElementById(b.dataset.p).classList.add('print-area');window.print()});
+ if(r==='profile')$('#pf').onsubmit=e=>{e.preventDefault();const v=id=>$('#'+id).value.trim();
+  const er=v('name').length<3?'Enter your full name.':!/^\S+@\S+\.\S+$/.test(v('email'))?'Enter a valid email.':!/^[6-9]\d{9}$/.test(v('phone'))?'Enter a 10-digit mobile number.':!v('dob')?'Enter your date of birth.':v('address').length<5?'Enter your address.':'';
+  const us=get(K.users,[]),me=user();if(!er&&us.some(u=>u.email===v('email').toLowerCase()&&u.id!==me.id)){$('#pe').textContent='That email belongs to another account.';return}
+  $('#pe').textContent=er;if(er)return;
+  Object.assign(us.find(u=>u.id===me.id),{name:v('name'),email:v('email').toLowerCase(),phone:v('phone'),dob:v('dob'),gender:v('gender'),blood:v('blood'),address:v('address')});
+  put(K.users,us);toast('Profile saved.');render()}
+}
+
+/* ---------- Admin portal ---------- */
+const pts=()=>get(K.users,[]).filter(u=>u.role!=='admin');
+const uname=id=>get(K.users,[]).find(u=>u.id===id)?.name||'Deleted patient';
+const pid=u=>'MC-'+u.id.replace(/\D/g,'').slice(-6).padStart(6,'0');
+const nid=(a,p,b)=>p+(Math.max(b,...a.map(x=>+String(x.id).split('-')[1]||0))+1);
+const arm=b=>{b.dataset.c=1;const t=b.textContent;b.textContent='Confirm?';setTimeout(()=>{delete b.dataset.c;b.textContent=t},3000)};
+const actBtns=x=>x.status==='Pending'?`<button class="btn btn-sm btn-teal" data-a="${x.id}:Confirmed">Confirm</button> <button class="btn btn-sm btn-outline-danger" data-a="${x.id}:Cancelled">Cancel</button>`:x.status==='Confirmed'?`<button class="btn btn-sm btn-success" data-a="${x.id}:Completed">Mark completed</button> <button class="btn btn-sm btn-outline-danger" data-a="${x.id}:Cancelled">Cancel</button>`:'<span class="text-secondary small">No actions</span>';
+function adminPage(){
+ const a=get(K.appts,[]),p=pts(),st=['Pending','Confirmed','Completed','Cancelled'],cnt=s=>a.filter(x=>x.status===s).length,mx=Math.max(1,...st.map(cnt));
+ const M=[['fa-users','Total Patients',p.length],['fa-user-doctor','Doctors',get(K.docs,[]).length],['fa-calendar-check','Appointments',a.length],['fa-hourglass-half','Pending Approvals',cnt('Pending')]];
+ const pend=a.filter(x=>x.status==='Pending').slice(0,5);
+ return shell('admin','Admin Overview',`<h3 class="mb-1">Administration</h3><p class="text-secondary mb-4">Manage appointments, patients, doctors and clinical records.</p>
+ <div class="row g-3 mb-4">${M.map(m=>`<div class="col-6 col-xl-3"><div class="panel metric"><div class="ico mb-0"><i class="fa-solid ${m[0]}"></i></div><div><div class="v">${m[2]}</div><div class="text-secondary small">${m[1]}</div></div></div></div>`).join('')}</div>
+ <div class="row g-3"><div class="col-lg-5"><div class="panel h-100"><h6 class="mb-3">Appointments by status</h6>${st.map(x=>`<div class="mb-3"><div class="d-flex justify-content-between small"><span>${x}</span><b>${cnt(x)}</b></div><div class="progress" style="height:8px"><div class="progress-bar" style="width:${cnt(x)/mx*100}%;background:var(--teal)"></div></div></div>`).join('')}</div></div>
+ <div class="col-lg-7"><div class="panel h-100"><div class="d-flex justify-content-between mb-3"><h6 class="mb-0">Awaiting approval</h6><a href="#/admin-appointments">View all</a></div>
+ ${pend.map(x=>`<div class="d-flex align-items-center gap-3 mb-3">${avatar(doc(x.doc),42)}<div class="flex-grow-1 small"><b>${esc(uname(x.uid))}</b> with ${doc(x.doc).name}<div class="text-secondary">${fmt(x.date)}, ${x.time} · ${esc(x.reason)}</div></div><button class="btn btn-sm btn-teal" data-a="${x.id}:Confirmed">Confirm</button></div>`).join('')||'<p class="text-secondary mb-0">All caught up. No pending requests.</p>'}</div></div></div>
+ <div class="panel mt-3"><h6 class="mb-3">Newest patients</h6><div class="table-responsive"><table class="table mb-0"><tbody>${p.slice(-4).reverse().map(u=>`<tr><td class="fw-semibold">${pid(u)}</td><td>${esc(u.name)}</td><td>${esc(u.email)}</td><td>${esc(u.blood)}</td></tr>`).join('')||'<tr><td class="text-secondary">No patients yet.</td></tr>'}</tbody></table></div></div>`)}
+function adminAppts(){
+ const a=get(K.appts,[]).sort((x,y)=>y.date.localeCompare(x.date));
+ return shell('admin-appointments','All Appointments',`<div class="panel mb-3"><div class="row g-2"><div class="col-md-8"><input id="aq" class="form-control" placeholder="Search by patient, doctor or appointment ID"></div><div class="col-md-4"><select id="af" class="form-select"><option value="">All statuses</option><option>Pending</option><option>Confirmed</option><option>Completed</option><option>Cancelled</option></select></div></div></div>
+ <div class="panel p-0 table-responsive"><table class="table mb-0 align-middle"><thead><tr><th>ID</th><th>Patient</th><th>Doctor</th><th>Date &amp; time</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+ ${a.map(x=>`<tr data-st="${x.status}" data-q="${esc((x.id+uname(x.uid)+doc(x.doc).name).toLowerCase())}"><td class="fw-semibold">${x.id}</td><td>${esc(uname(x.uid))}</td><td>${doc(x.doc).name}<div class="text-secondary small">${esc(x.reason)}</div></td><td>${fmt(x.date)}<div class="text-secondary small">${x.time}</div></td><td>${badge(x.status)}</td><td class="text-nowrap">${actBtns(x)}</td></tr>`).join('')||'<tr><td colspan="6" class="text-center text-secondary py-4">No appointments booked yet.</td></tr>'}</tbody></table></div>`)}
+function adminPatients(){
+ const P=pts(),a=get(K.appts,[]);
+ return shell('admin-patients','Patients',`<div class="panel mb-3"><input id="pq" class="form-control" placeholder="Search patients by name, email, phone or ID"></div>
+ <div class="panel p-0 table-responsive"><table class="table mb-0 align-middle"><thead><tr><th>Patient ID</th><th>Name</th><th>Contact</th><th>Age / Gender</th><th>Blood</th><th>Visits</th><th></th></tr></thead><tbody>
+ ${P.map(u=>`<tr data-q="${esc((pid(u)+u.name+u.email+u.phone).toLowerCase())}"><td class="fw-semibold">${pid(u)}</td><td>${esc(u.name)}</td><td>${esc(u.email)}<div class="text-secondary small">${esc(u.phone)}</div></td><td>${age(u.dob)} / ${esc(u.gender)}</td><td><span class="badge bg-danger-subtle text-danger">${esc(u.blood)}</span></td><td>${a.filter(x=>x.uid===u.id).length}</td><td class="text-nowrap"><button class="btn btn-sm btn-outline-navy" data-pv="${u.id}">View</button> <button class="btn btn-sm btn-outline-danger" data-pd="${u.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="7" class="text-center text-secondary py-4">No registered patients.</td></tr>'}</tbody></table></div>`)}
+function adminDoctors(){
+ return shell('admin-doctors','Manage Doctors',`<div class="d-flex justify-content-between mb-3"><h5 class="mb-0">Medical staff</h5><button class="btn btn-teal" id="nd"><i class="fa-solid fa-plus me-1"></i>Add Doctor</button></div>
+ <div class="panel p-0 table-responsive"><table class="table mb-0 align-middle"><thead><tr><th>Doctor</th><th>Department</th><th>Hospital</th><th>Experience</th><th>Fee</th><th>Days</th><th></th></tr></thead><tbody>
+ ${get(K.docs,[]).map(d=>`<tr><td><div class="d-flex align-items-center gap-2">${avatar(d,42)}<div><b>${d.name}</b><div class="text-secondary small">${d.qual}</div></div></div></td><td>${d.dept}</td><td class="small">${d.hospital}</td><td>${d.exp} yrs</td><td>&#8377;${d.fee}</td><td class="small">${d.days}</td><td class="text-nowrap"><button class="btn btn-sm btn-outline-navy" data-de="${d.id}">Edit</button> <button class="btn btn-sm btn-outline-danger" data-dd="${d.id}">Delete</button></td></tr>`).join('')}</tbody></table></div>`)}
+function adminRecs(){
+ const po=pts().map(u=>`<option value="${u.id}">${esc(u.name)} (${pid(u)})</option>`).join(''),dop=get(K.docs,[]).map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
+ const rc=get(K.recs,[]).slice(-4).reverse(),rx=get(K.rx,[]).slice(-4).reverse();
+ return shell('admin-records','Records &amp; Prescriptions',`<div class="row g-3"><div class="col-xl-6"><div class="panel"><h6 class="mb-3"><i class="fa-solid fa-file-medical text-teal me-2"></i>Add medical record</h6><div class="row g-2">
+ <div class="col-md-6"><select id="rp" class="form-select"><option value="">Select patient</option>${po}</select></div><div class="col-md-6"><select id="rd" class="form-select"><option value="">Select doctor</option>${dop}</select></div>
+ <div class="col-md-6"><input id="rdt" type="date" class="form-control" value="${day(0)}"></div><div class="col-md-6"><select id="rl" class="form-select"><option>Pending</option><option>Completed</option></select></div>
+ <div class="col-12"><input id="rdx" class="form-control" placeholder="Diagnosis"></div><div class="col-12"><textarea id="rn" class="form-control" rows="3" placeholder="Doctor's notes"></textarea></div></div>
+ <div class="text-danger small mt-2" id="re"></div><button type="button" class="btn btn-teal mt-3" id="rsave">Save record</button></div></div>
+ <div class="col-xl-6"><div class="panel"><h6 class="mb-3"><i class="fa-solid fa-prescription-bottle-medical text-teal me-2"></i>Issue prescription</h6><div class="row g-2">
+ <div class="col-md-6"><select id="xp" class="form-select"><option value="">Select patient</option>${po}</select></div><div class="col-md-6"><select id="xd" class="form-select"><option value="">Select doctor</option>${dop}</select></div>
+ <div class="col-12"><input id="xdt" type="date" class="form-control" value="${day(0)}"></div>
+ <div class="col-12"><textarea id="xm" class="form-control" rows="4" placeholder="One medicine per line:&#10;Name | Dosage | Frequency | Duration&#10;Paracetamol 500 mg | 1 tablet | Twice daily | 5 days"></textarea></div></div>
+ <div class="text-danger small mt-2" id="xe"></div><button type="button" class="btn btn-teal mt-3" id="xsave">Issue prescription</button></div></div></div>
+ <div class="panel mt-3"><h6 class="mb-3">Recently added</h6><div class="table-responsive"><table class="table mb-0"><tbody>
+ ${rc.map(x=>`<tr><td class="fw-semibold">${x.id}</td><td>${esc(uname(x.uid))}</td><td>${esc(x.dx)}</td><td>${doc(x.doc).name}</td></tr>`).join('')}${rx.map(x=>`<tr><td class="fw-semibold">${x.id}</td><td>${esc(uname(x.uid))}</td><td>${x.items.length} medicine(s)</td><td>${doc(x.doc).name}</td></tr>`).join('')}</tbody></table></div></div>`)}
+function docForm(id){
+ const d=id?doc(id):{name:'',spec:'',dept:'',qual:'',hospital:'',exp:5,fee:500,days:'Mon to Fri',rating:4.5,g:'M',about:''};
+ const f=(i,l,v,t='text',c='col-md-6')=>`<div class="${c}"><label class="form-label small">${l}</label><input id="f_${i}" type="${t}" class="form-control" value="${esc(v)}"></div>`;
+ $('#modals').innerHTML=`<div class="modal fade" id="dfm" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">${id?'Edit':'Add'} doctor</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="row g-3">
+ ${f('name','Full name (e.g. Dr. Name Surname)',d.name)}${f('spec','Specialization',d.spec)}${f('dept','Department',d.dept)}${f('qual','Qualification',d.qual)}${f('hospital','Hospital / clinic',d.hospital,'text','col-12')}${f('exp','Experience (years)',d.exp,'number')}${f('fee','Fee (INR)',d.fee,'number')}${f('days','Available days',d.days)}${f('rating','Rating (0 to 5)',d.rating,'number')}
+ <div class="col-md-6"><label class="form-label small">Portrait style</label><select id="f_g" class="form-select"><option value="M" ${d.g==='M'?'selected':''}>Male</option><option value="F" ${d.g==='F'?'selected':''}>Female</option></select></div>
+ <div class="col-12"><label class="form-label small">About</label><textarea id="f_about" class="form-control" rows="3">${esc(d.about)}</textarea></div></div><div class="text-danger small mt-2" id="fe"></div></div>
+ <div class="modal-footer"><button class="btn btn-light" data-bs-dismiss="modal">Cancel</button><button type="button" class="btn btn-teal" id="fs">Save doctor</button></div></div></div></div>`;
+ const m=new bootstrap.Modal('#dfm');m.show();
+ $('#fs').onclick=()=>{const v=i=>$('#f_'+i).value.trim();
+  const er=v('name').length<4?'Enter the doctor name.':!v('spec')?'Enter a specialization.':!v('hospital')?'Enter the hospital or clinic.':(v('exp')===''||+v('exp')<0)?'Enter experience in years.':!(+v('fee')>0)?'Enter a valid fee.':!(+v('rating')>=0&&+v('rating')<=5)?'Rating must be between 0 and 5.':'';
+  $('#fe').textContent=er;if(er)return;
+  const l=get(K.docs,[]),o={name:v('name'),spec:v('spec'),dept:v('dept')||v('spec'),qual:v('qual')||'MBBS',hospital:v('hospital'),exp:+v('exp'),fee:+v('fee'),days:v('days')||'Mon to Fri',rating:+v('rating'),g:v('g'),about:v('about')||'Experienced consultant at MediCare.'};
+  if(id)Object.assign(l.find(x=>x.id===id),o);else l.push({id:'d'+Date.now(),icon:'fa-user-doctor',skin:'#DDAA85',hair:'#1f2937',lang:'English, Tamil',patients:0,reviews:0,skills:[o.spec],...o});
+  put(K.docs,l);m.hide();toast('Doctor saved.');setTimeout(render,300)}}
+function adminBind(r){
+ document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const[i,st]=b.dataset.a.split(':');if(st==='Cancelled'&&!b.dataset.c){arm(b);return}const l=get(K.appts,[]);l.find(x=>x.id===i).status=st;put(K.appts,l);toast(i+' marked as '+st+'.');render()});
+ if(r==='admin-appointments'){const fl=()=>{const q=$('#aq').value.toLowerCase(),s=$('#af').value;document.querySelectorAll('tbody tr[data-st]').forEach(t=>t.style.display=(!s||t.dataset.st===s)&&t.dataset.q.includes(q)?'':'none')};$('#aq').oninput=fl;$('#af').onchange=fl}
+ if(r==='admin-patients'){
+  $('#pq').oninput=()=>{const q=$('#pq').value.toLowerCase();document.querySelectorAll('tbody tr[data-q]').forEach(t=>t.style.display=t.dataset.q.includes(q)?'':'none')};
+  document.querySelectorAll('[data-pv]').forEach(b=>b.onclick=()=>{const u=get(K.users,[]).find(x=>x.id===b.dataset.pv),n=k=>get(k,[]).filter(x=>x.uid===u.id).length;
+   $('#modals').innerHTML=`<div class="modal fade" id="pm" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">${esc(u.name)} · ${pid(u)}</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body small"><div class="row g-2 mb-3">${[['Appointments',n(K.appts)],['Records',n(K.recs)],['Prescriptions',n(K.rx)]].map(x=>`<div class="col-4"><div class="dstat"><b>${x[1]}</b>${x[0]}</div></div>`).join('')}</div>
+   <p class="mb-1"><i class="fa-solid fa-envelope fa-fw text-teal"></i> ${esc(u.email)}</p><p class="mb-1"><i class="fa-solid fa-phone fa-fw text-teal"></i> ${esc(u.phone)}</p><p class="mb-1"><i class="fa-solid fa-cake-candles fa-fw text-teal"></i> ${fmt(u.dob)} (${age(u.dob)} years), ${esc(u.gender)}</p><p class="mb-1"><i class="fa-solid fa-droplet fa-fw text-teal"></i> Blood group ${esc(u.blood)}</p><p class="mb-0"><i class="fa-solid fa-location-dot fa-fw text-teal"></i> ${esc(u.address)}</p></div></div></div></div>`;new bootstrap.Modal('#pm').show()});
+  document.querySelectorAll('[data-pd]').forEach(b=>b.onclick=()=>{if(!b.dataset.c){arm(b);return}const id=b.dataset.pd;put(K.users,get(K.users,[]).filter(u=>u.id!==id));[K.appts,K.recs,K.rx].forEach(k=>put(k,get(k,[]).filter(x=>x.uid!==id)));toast('Patient and related data deleted.');render()})}
+ if(r==='admin-doctors'){$('#nd').onclick=()=>docForm('');document.querySelectorAll('[data-de]').forEach(b=>b.onclick=()=>docForm(b.dataset.de));
+  document.querySelectorAll('[data-dd]').forEach(b=>b.onclick=()=>{if(!b.dataset.c){arm(b);return}put(K.docs,get(K.docs,[]).filter(d=>d.id!==b.dataset.dd));toast('Doctor removed.');render()})}
+ if(r==='admin-records'){const v=i=>$('#'+i).value.trim();
+  $('#rsave').onclick=()=>{const er=!v('rp')?'Select a patient.':!v('rd')?'Select a doctor.':!v('rdt')?'Choose a date.':v('rdx').length<3?'Enter the diagnosis.':v('rn').length<3?'Add the doctor notes.':'';$('#re').textContent=er;if(er)return;const l=get(K.recs,[]);l.push({id:nid(l,'REC-',2000),uid:v('rp'),doc:v('rd'),date:v('rdt'),dx:v('rdx'),notes:v('rn'),lab:v('rl')});put(K.recs,l);toast('Medical record added to the patient file.');render()};
+  $('#xsave').onclick=()=>{const items=v('xm').split('\n').map(x=>x.split('|').map(y=>y.trim())).filter(x=>x[0]);const bad=!items.length||items.some(x=>x.length<4||x.some(y=>!y));
+   const er=!v('xp')?'Select a patient.':!v('xd')?'Select a doctor.':!v('xdt')?'Choose a date.':bad?'Enter each medicine as: Name | Dosage | Frequency | Duration':'';$('#xe').textContent=er;if(er)return;
+   const l=get(K.rx,[]);l.push({id:nid(l,'RX-',3000),uid:v('xp'),doc:v('xd'),date:v('xdt'),active:true,items:items.map(x=>({n:x[0],d:x[1],f:x[2],dur:x[3]}))});put(K.rx,l);toast('Prescription issued to the patient.');render()}}
+}
+const ADMIN={admin:adminPage,'admin-appointments':adminAppts,'admin-patients':adminPatients,'admin-doctors':adminDoctors,'admin-records':adminRecs};
+/* Forms that work even where the preview blocks native form submission */
+function wireForms(){document.querySelectorAll('form').forEach(f=>{const h=f.onsubmit;if(!h||f.__w)return;f.__w=1;f.onsubmit=e=>{e.preventDefault()};const run=()=>h.call(f,{preventDefault(){}});const b=f.querySelector('button:not([type]),button[type=submit]');if(b){b.type='button';b.addEventListener('click',run)}f.addEventListener('keydown',e=>{if(e.key==='Enter'&&!['TEXTAREA','BUTTON'].includes(e.target.tagName)){e.preventDefault();run()}})})}
+/* ---------- Router ---------- */
+const PAGES={dashboard,profile:profilePage,doctors:doctorsPage,appointments:apptPage,records:recordsPage,prescriptions:rxPage};
+function render(){
+ const r=CUR.split('?')[0];
+ const app=$('#app');
+ if(PAGES[r]||ADMIN[r]){const u=user();if(!u){go('login');return}const adm=u.role==='admin';if(adm!==!!ADMIN[r]){go(adm?'admin':'dashboard');return}app.innerHTML=(ADMIN[r]||PAGES[r])();bindApp(r)}
+ else if(r==='login'){if(user()){go(user().role==='admin'?'admin':'dashboard');return}app.innerHTML=loginPage();bindPublic('login')}
+ else if(r==='register'){app.innerHTML=registerPage();bindPublic('register')}
+ else{app.innerHTML=landing();bindPublic('home')}
+ wireForms();window.scrollTo(0,0);
+}
+let CUR=location.hash.replace('#/','');
+function go(p){CUR=p;try{history.pushState(null,'','#/'+p)}catch(e){}render()}
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#/"]');if(!a||a.dataset.s)return;e.preventDefault();go(a.getAttribute('href').slice(2))});
+window.addEventListener('popstate',()=>{CUR=location.hash.replace('#/','');render()});
+render();
+</script>
+</body>
+</html>
